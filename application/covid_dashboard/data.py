@@ -1,56 +1,50 @@
 """Prepare data for Plotly Dash."""
-import numpy as np
 import pandas as pd
+import numpy as np
+from datetime import datetime
 import requests
+from sodapy import Socrata
 
+"""Calling data from CDC Source using Socrata"""
+def call_client():
+    # Authenticated client:
+    client = Socrata("data.cdc.gov",
+                     app_token="PRIVATE",
+                     username="PRIVATE",
+                     password="PRIVATE")
 
-def create_dataframe():
-    """Create Pandas DataFrame from JSON request"""
-    data = requests.get('https://api.covidtracking.com/v1/us/daily.json').json()
-    df = pd.DataFrame.from_dict(data)
+def create_case_death_df():
+    """Data Pulls"""
+    # Case & Death Data ~20s
+    results = client.get_all("9mfq-cb36")
+    df_case_death = pd.DataFrame.from_records(results)
     
-    # Setting date column to date format
-    df['date'] = pd.to_datetime(df['date'], format='%Y%m%d')
+    """Data Processing & Formatting"""
+    # Case & Death Data
+    # Changing data types
+    df_case_death['submission_date'] = df_case_death['submission_date'].astype('datetime64')
+    df_case_death['state'] = df_case_death['state'].astype('string')
+    df_case_death['tot_cases'] = df_case_death['tot_cases'].astype('float')
+    df_case_death['conf_cases'] = df_case_death['conf_cases'].astype('float')
+    df_case_death['prob_cases'] = df_case_death['prob_cases'].astype('float')
+    df_case_death['new_case'] = df_case_death['new_case'].astype('float')
+    df_case_death['pnew_case'] = df_case_death['pnew_case'].astype('float')
+    df_case_death['tot_death'] = df_case_death['tot_death'].astype('float')
+    df_case_death['conf_death'] = df_case_death['conf_death'].astype('float')
+    df_case_death['prob_death'] = df_case_death['prob_death'].astype('float')
+    df_case_death['new_death'] = df_case_death['new_death'].astype('float')
+    df_case_death['pnew_death'] = df_case_death['pnew_death'].astype('float')
+    df_case_death['created_at'] = df_case_death['created_at'].astype('datetime64')
     
-    # Dropping irrelvant/depreciated coulmns
-    df = df.drop(columns=['dateChecked', 'lastModified', 'posNeg', 'total', 'hospitalized', 'recovered'])
-    
-    # Fixing a few rows that have the wrong values
-    # Total test results does not show correct values when there are positive test cases
-    # Therefore I increase the total test results to match the number of cases
-    # This only effected 4 dates
-    fix_1_19_20 = len(df.index) - 7
-    fix_1_19_20 = len(df.index) - 8
-    fix_1_19_20 = len(df.index) - 9
-    fix_1_19_20 = len(df.index) - 10
-    
-    df.at[fix_1_19_20, 'totalTestResults'] = 1
-    df.at[fix_1_19_20, 'totalTestResults'] = 1
-    df.at[fix_1_19_20, 'totalTestResults'] = 2
-    df.at[fix_1_19_20, 'totalTestResults'] = 2
-    
-    # Calculated columns
-    # Rolling averages
-    df['7d_ra_pos_in'] = df['positiveIncrease'].rolling(7).mean()
-    df['30d_ra_pos_in'] = df['positiveIncrease'].rolling(30).mean()
-    df['7d_ra_neg_in'] = df['negativeIncrease'].rolling(7).mean()
-    df['30d_ra_neg_in'] = df['negativeIncrease'].rolling(30).mean()
-    df['7d_ra_tot_res_in'] = df['totalTestResultsIncrease'].rolling(7).mean()
-    df['30d_ra_tot_res_in'] = df['totalTestResultsIncrease'].rolling(30).mean()
-    df['7d_ra_hos_in'] = df['hospitalizedIncrease'].rolling(7).mean()
-    df['30d_ra_hos_in'] = df['hospitalizedIncrease'].rolling(30).mean()
-    df['7d_ra_dth_in'] = df['deathIncrease'].rolling(7).mean()
-    df['30d_ra_dth_in'] = df['deathIncrease'].rolling(30).mean()
-    
-    # Creating calulated columns Rates
-    df['positive_rate'] = df['positive']/df['totalTestResults']
-    df['negative_rate'] = df['negative']/df['totalTestResults']
-    df['pending_rate'] = df['pending']/df['totalTestResults']
-    df['hospitalized_rate'] = df['hospitalizedCumulative']/df['positive']
-    df['ICU_rate'] = df['inIcuCumulative']/df['positive']
-    df['ventilator_rate'] = df['onVentilatorCumulative']/df['positive']
-    df['death_rate'] = df['death']/df['positive']
-    df['hos_ICU_rate'] = df['inIcuCumulative']/df['hospitalizedCumulative']
-    df['hos_ventilator_rate'] = df['onVentilatorCumulative']/df['hospitalizedCumulative']
+    #aggregating data based on submission date
+    df_case_death_agg = df_case_death.groupby('submission_date', as_index=False).sum()
+
+    df_case_death_agg['7d_ra_case'] = df_agg['new_case'].rolling(7).mean()
+    df_case_death_agg['30d_ra_case'] = df_agg['new_case'].rolling(30).mean()
+    df_case_death_agg['7d_ra_death'] = df_agg['new_death'].rolling(7).mean()
+    df_case_death_agg['30d_ra_death'] = df_case_death_agg['new_death'].rolling(30).mean()
+
+    # sorting data
+    df_agg = df_agg.sort_values(by=['submission_date'], ascending=False, ignore_index=True)
     
     return df
