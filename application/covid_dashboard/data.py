@@ -181,7 +181,7 @@ def create_hos_df():
     # Calling data from CDC Source using Socrata
     client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     
-    """Case Status ~2s""""
+    """Case Status ~2s"""
     results = client.get("vbim-akqf", 
                          select = ["current_status, count('cdc_case_earliest_dt')"],
                          group = ["current_status"])
