@@ -35,9 +35,9 @@ def create_case_death_df():
     #aggregating data based on submission date
     df_case_death_agg = df_case_death.groupby('submission_date', as_index=False).sum()
 
-    df_case_death_agg['7d_ra_case'] = df_agg['new_case'].rolling(7).mean()
-    df_case_death_agg['30d_ra_case'] = df_agg['new_case'].rolling(30).mean()
-    df_case_death_agg['7d_ra_death'] = df_agg['new_death'].rolling(7).mean()
+    df_case_death_agg['7d_ra_case'] = df_case_death_agg['new_case'].rolling(7).mean()
+    df_case_death_agg['30d_ra_case'] = df_case_death_agg['new_case'].rolling(30).mean()
+    df_case_death_agg['7d_ra_death'] = df_case_death_agg['new_death'].rolling(7).mean()
     df_case_death_agg['30d_ra_death'] = df_case_death_agg['new_death'].rolling(30).mean()
 
     # sorting data
