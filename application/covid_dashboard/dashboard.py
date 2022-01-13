@@ -108,42 +108,13 @@ def init_callbacks(dash_app):
                     ])
                         )
             elif active_tab == "tab-2":
-                return html.Br(),
-                    dcc.Graph(id='animated_map', figure=animated_map),
+                return (html.Br(),
+                    dcc.Graph(id='animated_map', figure=animated_map)
+                       )
             elif active_tab == "tab-3":
                 return (html.Br(),
-                    dcc.Graph(id='test_fig', figure=test_fig),
-#                     html.Div(
-#                             [
-#                                 dbc.Button(
-#                                     "Positive Rate Calculation",
-#                                     id="collapse-button-1",
-#                                     className="mb-3",
-#                                     color="primary",
-#                                 ),
-#                                 dbc.Collapse(
-#                                     dbc.Card(dbc.CardBody("Cumulative positive results / Cumulative test results = Positive rate")),
-#                                     id="collapse-1",
-#                                 ),
-#                             ]
-#                         ),
-#                     dcc.Graph(id='fig_neg_rate', figure=fig_neg_rate),
-#                     html.Div(
-#                             [
-#                                 dbc.Button(
-#                                     "Negative Rate Calculation",
-#                                     id="collapse-button-2",
-#                                     className="mb-3",
-#                                     color="primary",
-#                                 ),
-#                                 dbc.Collapse(
-#                                     dbc.Card(dbc.CardBody("Cumulative negative results / Cumulative test results = Negative rate")),
-#                                     id="collapse-2",
-#                                 ),
-#                             ]
-#                         ),
-#                     dcc.Graph(id='fig_cum_test', figure=fig_cum_test)
-#                     )
+                    dcc.Graph(id='test_fig', figure=test_fig)
+                       )
             elif active_tab == "tab-4":
                 return (
                     dcc.Graph(id='hos_case_fig', figure=hos_case_fig),
@@ -156,72 +127,11 @@ def init_callbacks(dash_app):
                     dcc.Graph(id='hos_death_fig', figure=hos_med_fig),
                     dcc.Graph(id='hos_death_fig', figure=hos_icu_ts_fig),
                     dcc.Graph(id='hos_death_fig', figure=hos_hos_ts_fig)
-                    
-#                     html.Div(
-#                             [
-#                                 dbc.Button(
-#                                     "Hospitalized Rate Calculation",
-#                                     id="collapse-button-3",
-#                                     className="mb-3",
-#                                     color="primary",
-#                                 ),
-#                                 dbc.Collapse(
-#                                     dbc.Card(dbc.CardBody("Cumulative hospitalized results / Cumulative positive test results = Hospitalized rate")),
-#                                     id="collapse-3",
-#                                 ),
-#                             ]
-#                         ),
-#                     dcc.Graph(id='fig_hos_icu_rate', figure=fig_hos_icu_rate),
-#                     html.Div(
-#                             [
-#                                 dbc.Button(
-#                                     "ICU Rate Calculation",
-#                                     id="collapse-button-4",
-#                                     className="mb-3",
-#                                     color="primary",
-#                                 ),
-#                                 dbc.Collapse(
-#                                     dbc.Card(dbc.CardBody("Cumulative ICU patients / Cumulative hospitalized patients = ICU rate")),
-#                                     id="collapse-4",
-#                                 ),
-#                             ]
-#                         ),
-#                     dcc.Graph(id='fig_hos_ven_rate', figure=fig_hos_ven_rate),
-#                     html.Div(
-#                             [
-#                                 dbc.Button(
-#                                     "Ventilator Rate Calculation",
-#                                     id="collapse-button-5",
-#                                     className="mb-3",
-#                                     color="primary",
-#                                 ),
-#                                 dbc.Collapse(
-#                                     dbc.Card(dbc.CardBody("Cumulative ventilator patients / Cumulative hospitalized patients = Ventilator rate")),
-#                                     id="collapse-5",
-#                                 ),
-#                             ]
-#                         ),
-#                     dcc.Graph(id='fig_cum_hos', figure=fig_cum_hos)
-                    )
+                )
             elif active_tab == "tab-5":
                 return (
-                    dcc.Graph(id='death_fig', figure=death_fig),
-#                     html.Div(
-#                             [
-#                                 dbc.Button(
-#                                     "Death Rate Calculation",
-#                                     id="collapse-button-6",
-#                                     className="mb-3",
-#                                     color="primary",
-#                                 ),
-#                                 dbc.Collapse(
-#                                     dbc.Card(dbc.CardBody("Cumulative dead / Cumulative positive results = Death rate")),
-#                                     id="collapse-6",
-#                                 ),
-#                             ]
-#                         ),
-#                     dcc.Graph(id='fig_cum_death', figure=fig_cum_dth)
-                    )
+                    dcc.Graph(id='death_fig', figure=death_fig)
+                )
             elif active_tab == "tab-6":
                 return (
                     html.H4("Dashboard Information"),
@@ -237,14 +147,9 @@ def init_callbacks(dash_app):
                         ]),
                     html.Div([
                         html.P(["The data scource comes from ",
-                                html.A("CDC",
-                                       href='https://covidtracking.com', target="_blank"),
-#                                 html.Li(["Note that data collection through The COVID Tracking Project will end on March 7, 2021 as explained in this ",
-#                                 html.A("post.",
-#                                        href='https://covidtracking.com/analysis-updates/covid-tracking-project-end-march-7', target="_blank"),
-#                                  ])
-#                                 ]),
-                        ]),
+                                html.A("CDC", href='https://covidtracking.com', target="_blank")
+                               ]),
+                    ]),
                     html.Div([
                         html.P(["The dashboard is hosted on a Raspberry Pi through the use of ",
                                 html.A("NGINX",
