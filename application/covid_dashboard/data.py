@@ -12,6 +12,7 @@ def call_client():
                      app_token="PRIVATE",
                      username="PRIVATE",
                      password="PRIVATE")
+    return client
 
 """CASE & DEATH DATA"""
 def create_case_death_df():
