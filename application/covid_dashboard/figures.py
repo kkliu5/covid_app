@@ -4,10 +4,7 @@ from dash.dependencies import Input, Output
 import plotly.express as px
 from datetime import datetime
 
-from .data import create_case_death_df
-from .data import create_test_df
-from .data import create_vacc_df
-from .data import create_hos_df
+from .data import *
 
 # Load DataFrame
 df_case_death_agg = create_case_death_df()
