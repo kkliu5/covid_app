@@ -4,10 +4,16 @@ from dash.dependencies import Input, Output
 import plotly.express as px
 from datetime import datetime
 
-from .data import create_dataframe
+from .data import create_case_death_df
+from .data import create_test_df
+from .data import create_vacc_df
+from .data import create_hos_df
 
 # Load DataFrame
-df = create_dataframe()
+df_case_death_agg = create_case_death_df()
+df_test_agg = create_test_df()
+counties, df_vacc_animated, df_vacc_static = create_vacc_df()
+df_hos_1, df_hos_2, df_hos_3, df_hos_4, df_hos_5, df_hos_6, df_hos_7, df_hos_8, df_hos_9, df_hos_10 = create_hos_df()
 
 # Graphing Functions
 def customlegend(fig, new_legend):
@@ -18,171 +24,125 @@ def customlegend(fig, new_legend):
     return(fig)
 
 def fig_format(fig):
-    fig.update_xaxes(rangeslider=dict(visible=True))
+    #fig.update_xaxes(rangeslider=dict(visible=True))
     fig.update_layout({'plot_bgcolor': 'rgba(0,0,0,0)',
                        'paper_bgcolor': 'rgba(0,0,0,0)'})
     fig.update_layout(font_color= 'white', xaxis_title='Date', yaxis_title='Amount', legend_title_text='Variable')
     fig.update_xaxes(showgrid=False)
     fig.update_yaxes(showgrid=False)
+    fig.update_layout(title={'y':0.85,'x':0.5,'xanchor': 'center','yanchor': 'top'})
     return(fig)
 
 #Figures/Graphs
-#positive increase
-fig_pos_test_in = px.line(df, x='date', y=['positiveIncrease', '7d_ra_pos_in', '30d_ra_pos_in'],
-                          title='Daily Change in Positive Covid-19 Cases',
-                          template = 'simple_white')
-fig_format(fig_pos_test_in)
-fig_pos_test_in = customlegend(fig = fig_pos_test_in,
-                               new_legend = {'positiveIncrease':'Positive Increase',
-                                             '7d_ra_pos_in': '7 Day Rolling Average',
-                                             '30d_ra_pos_in': '30 Day Rolling Average'
-                                             })
+"""Daily Cases"""
+case_fig = px.line(df_case_death_agg, x='submission_date', y=['new_case','7d_ra_case','30d_ra_case'],
+                   labels={"value":"Cases", "submission_date":"Date"},
+                   title=('Daily Cases'))
+case_fig = customlegend(fig = case_fig,
+                        new_legend = {'new_case':'Daily Case',
+                                      '7d_ra_case': '7 Day Rolling Average',
+                                      '30d_ra_case': '30 Day Rolling Average'})
+fig_format(case_fig)
+case_fig.show()
 
-# hospital increase
-fig_hos_in = px.line(df, x='date', y=['hospitalizedIncrease', '7d_ra_hos_in', '30d_ra_hos_in'],
-                     title='Daily Change in Covid-19 Hospitalzations',
-                     template = 'simple_white')
-fig_format(fig_hos_in)
-fig_hos_in = customlegend(fig = fig_hos_in,
-                               new_legend = {'hospitalizedIncrease':'Hospitalization Increase',
-                                             '7d_ra_hos_in': '7 Day Rolling Average',
-                                             '30d_ra_hos_in': '30 Day Rolling Average'
-                                             })
+"""Daily Deaths"""
+death_fig = px.line(df_case_death_agg, x='submission_date', y=['new_death','7d_ra_death','30d_ra_death'],
+                   labels={"value":"Deaths", "submission_date":"Date"},
+                   title=('Daily Deaths'))
+death_fig = customlegend(fig = death_fig,
+                        new_legend = {'new_death':'Daily Death',
+                                      '7d_ra_death': '7 Day Rolling Average',
+                                      '30d_ra_death': '30 Day Rolling Average'})
+fig_format(death_fig)
+death_fig.show()
 
-# death increase
-fig_dth_in = px.line(df, x='date', y=['deathIncrease', '7d_ra_dth_in', '30d_ra_dth_in'],
-                     title='Daily Change in Deaths Due to Covid-19',
-                     template = 'simple_white')
-fig_format(fig_dth_in)
-fig_dth_in = customlegend(fig = fig_dth_in,
-                               new_legend = {'deathIncrease':'Death Increase',
-                                             '7d_ra_dth_in': '7 Day Rolling Average',
-                                             '30d_ra_dth_in': '30 Day Rolling Average'
-                                             })
+"""Daily Tests"""
+test_fig = px.bar(df_test_agg, x='date', y=['tot_test_daily'],
+                 labels={"value":"Tests", "date":"Date"},
+                 title=('Daily Tests'))
+test_fig = customlegend(fig = test_fig,
+                        new_legend = {'tot_test_daily':'Daily Test'})
+fig_format(test_fig)
+test_fig.show()
 
-# negative increase - not used
-fig_neg_test_in = px.line(df, x='date', y=['negativeIncrease', '7d_ra_neg_in', '30d_ra_neg_in'],
-                            title='Negative Increase',
-                          template='none')
-fig_neg_test_in.update_xaxes(rangeslider=dict(visible=True))
+"""Animated Vaccine Map"""
+#creating map that displays percent vaccinated by county over time
+animated_map = px.choropleth_mapbox(df_vacc_animated, geojson=counties, locations='fips', color='series_complete_pop_pct',
+                           animation_frame='date',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 100),
+                           mapbox_style="carto-positron",
+                           zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
+                           opacity=0.5,
+                           labels={'series_complete_pop_pct':'Vaccinated Percentage',
+                                  'date':'Date',
+                                  'fips':'FIPS Code'}
+                          )
+animated_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+animated_map.show()
 
-# total results increase - not used
-fig_tot_test_in = px.line(df, x='date', y=['totalTestResults', '7d_ra_tot_res_in', '30d_ra_tot_res_in'],
-                            title='Total Test Results Increase')
-fig_tot_test_in.update_xaxes(rangeslider=dict(visible=True))
+#Static Vaccine Map
+#creating map that displays percent vaccinated by county currently
+current_map = px.choropleth_mapbox(df_vacc_static, geojson=counties, locations='fips', color='series_complete_pop_pct',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 100),
+                           mapbox_style="carto-positron",
+                           zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
+                           opacity=0.5,
+                           labels={'series_complete_pop_pct':'Vaccinated Percentage',
+                                  'date':'Date',
+                                  'fips':'FIPS Code'}
+                          )
+animated_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+animated_map.show()
 
-
-
-# Cumulative testing results 
-fig_cum_test = px.line(df, x='date', y=['positive','negative','totalTestResults'],
-                     title='Cumulative Testing Results',
-                     template = 'simple_white')
-fig_format(fig_cum_test)
-fig_cum_test = customlegend(fig = fig_cum_test,
-                               new_legend = {'positive':'Positive Results',
-                                             'negative': 'Negative Results',
-                                             'totalTestResults': 'Total Testing Results'
-                                             })
-
-# Cumulative hospitalized results 
-fig_cum_hos = px.line(df, x='date', y=['hospitalizedCumulative','inIcuCumulative','onVentilatorCumulative'],
-                     title='Cumulative Hospitalized Due to Covid-19',
-                     template = 'simple_white')
-fig_format(fig_cum_hos)
-fig_cum_hos = customlegend(fig = fig_cum_hos,
-                               new_legend = {'hospitalizedCumulative':'Total Hospitalized',
-                                             'inIcuCumulative': 'Total in ICU',
-                                             'onVentilatorCumulative': 'Total on Ventilator'
-                                             })
-
-# Cumulative death results 
-fig_cum_dth = px.line(df, x='date', y=['death'],
-                     title='Cumulative Deaths Due to Covid-19',
-                     template = 'simple_white')
-fig_format(fig_cum_dth)
-fig_cum_dth = customlegend(fig = fig_cum_dth,
-                               new_legend = {'death':'Deaths'})
-
-
-
-#Rates
-#Positive Rate (Positive cases/Total cases)
-fig_pos_rate = px.line(df, x='date', y=['positive_rate'],
-                       title='Positive Rate',
-                       template = 'simple_white')
-fig_format(fig_pos_rate)
-fig_pos_rate = customlegend(fig = fig_pos_rate,
-                               new_legend = {'positive_rate':'Positive Rate'
-                                             })
-
-#Negative Rate (Negative cases/Total cases)
-fig_neg_rate = px.line(df, x='date', y=['negative_rate'],
-                       title='Negative Rate',
-                       template = 'simple_white')
-fig_format(fig_neg_rate)
-fig_neg_rate = customlegend(fig = fig_neg_rate,
-                               new_legend = {'negative_rate':'Negative Rate'
-                                             })
-
-#Pending Rate (Pending cases/Total cases) - Not Used
-fig_pen_rate = px.line(df, x='date', y=['pending_rate'],
-                       title='Pending Rate',
-                       template = 'simple_white')
-fig_format(fig_pen_rate)
-fig_pen_rate = customlegend(fig = fig_pen_rate,
-                               new_legend = {'pending_rate':'Pending Rate'
-                                             })
-
-#Hospitalized Rate (Hospitalized cases/Positive cases)
-fig_hos_rate = px.line(df, x='date', y=['hospitalized_rate'],
-                       title='Hospitalized Rate',
-                       template = 'simple_white')
-fig_format(fig_hos_rate)
-fig_hos_rate = customlegend(fig = fig_hos_rate,
-                               new_legend = {'hospitalized_rate':'Hospitalized Rate'
-                                             })
-
-#ICU Rate (ICU cases/Positive cases) - Not Used
-fig_icu_rate = px.line(df, x='date', y=['ICU_rate'],
-                       title='ICU Rate',
-                       template = 'simple_white')
-fig_format(fig_icu_rate)
-fig_icu_rate = customlegend(fig = fig_icu_rate,
-                               new_legend = {'ICU_rate':'ICU Rate'
-                                             })
-
-#Ventilator Rate (Positive cases/Positive cases) - Not Used
-fig_ven_rate = px.line(df, x='date', y=['ventilator_rate'],
-                       title='Ventalator Rate',
-                       template = 'simple_white')
-fig_format(fig_ven_rate)
-fig_ven_rate = customlegend(fig = fig_ven_rate,
-                               new_legend = {'ventilator_rate':'Ventilator Rate'
-                                             })
-
-#Death Rate (Deaths/Positive cases)
-fig_dth_rate = px.line(df, x='date', y=['death_rate'],
-                       title='Death Rate',
-                       template = 'simple_white')
-fig_format(fig_dth_rate)
-fig_dth_rate = customlegend(fig = fig_dth_rate,
-                               new_legend = {'death_rate':'Death Rate'
-                                             })
-
-#ICU Rate based on Hospitalzations (ICU cases/Hospitalized cases)
-fig_hos_icu_rate = px.line(df, x='date', y=['hos_ICU_rate'],
-                           title='ICU Rate Realative to Hospitalzations Due to Covid-19',
-                           template = 'simple_white')
-fig_format(fig_hos_icu_rate)
-fig_hos_icu_rate = customlegend(fig = fig_hos_icu_rate,
-                               new_legend = {'hos_ICU_rate':'ICU Rate'
-                                             })
-
-#Ventilator Rate based on Hospitalzations (Positive cases/Hospitalized cases) 
-fig_hos_ven_rate = px.line(df, x='date', y=['hos_ventilator_rate'],
-                           title='Ventalator Rate Realative to Hospitalzations Due to Covid-19',
-                           template = 'simple_white')
-fig_format(fig_hos_ven_rate)
-fig_hos_ven_rate = customlegend(fig = fig_hos_ven_rate,
-                               new_legend = {'hos_ventilator_rate':'Ventilator Rate'
-                                             })
+"""Case Status"""
+hos_case_fig = px.bar(df_hos_1, 
+             x='current_status', 
+             y='count_cdc_case_earliest_dt',
+             labels={"current_status": "Current Status",  "count_cdc_case_earliest_dt": "Count of Cases"},
+             title=('Cases'))
+"""Cases by Sex"""
+hos_sex_fig = px.bar(df_hos_2, x='sex', y='count_cdc_case_earliest_dt',
+            labels={"sex": "Sex",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('Cases by Sex'))
+"""Cases by Age Group"""
+hos_age_fig = px.bar(df_hos_3, x='age_group', y='count_cdc_case_earliest_dt',
+            labels={"age_group": "Age Group",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('Cases by Age Group')
+            )
+"""Cases by Race"""
+hos_race_fig = px.bar(df_hos_4, x='race_ethnicity_combined', y='count_cdc_case_earliest_dt',
+            labels={"race_ethnicity_combined": "Race",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('Cases by Race')
+            )
+"""Case by Hospitalzation"""
+hos_hos_fig = px.bar(df_hos_5, x='hosp_yn', y='count_cdc_case_earliest_dt',
+            labels={"hosp_yn": "Hospitalized",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('Cases by Hospitalzation Status')
+            )
+""" Cases by ICU"""
+hos_icu_fig = px.bar(df_hos_6, x='icu_yn', y='count_cdc_case_earliest_dt',
+            labels={"icu_yn": "ICU Status",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('Cases by ICU Status')
+            )
+"""Cases by Death Status"""
+hos_death_fig = px.bar(df_hos_7, x='death_yn', y='count_cdc_case_earliest_dt',
+            labels={"death_yn": "Death Status",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('Cases by Death Status')
+            )
+"""Cases with Medical Status"""
+hos_med_fig = px.bar(df_hos_8, x='medcond_yn', y='count_cdc_case_earliest_dt',
+            labels={"medcond_yn": "Medical Status",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('Cases by Presence of Underlying Comorbidity or Disease')
+            )
+"""ICU Cases Over Time"""
+hos_icu_ts_fig = px.line(df_hos_9, x='cdc_case_earliest_dt', y='count_cdc_case_earliest_dt',
+            labels={"cdc_case_earliest_dt": "Date",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('ICU Cases over Time')
+"""Hospitalized Cases Over Time"""
+hos_hos_ts_fig = px.line(df_hos_10, x='cdc_case_earliest_dt', y='count_cdc_case_earliest_dt',
+            labels={"cdc_case_earliest_dt": "Date",  "count_cdc_case_earliest_dt": "Count of Cases"},
+            title=('Hospitalized Cases over Time')
+            )
+              
