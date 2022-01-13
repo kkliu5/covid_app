@@ -137,6 +137,7 @@ hos_med_fig = px.bar(df_hos_8, x='medcond_yn', y='count_cdc_case_earliest_dt',
 hos_icu_ts_fig = px.line(df_hos_9, x='cdc_case_earliest_dt', y='count_cdc_case_earliest_dt',
             labels={"cdc_case_earliest_dt": "Date",  "count_cdc_case_earliest_dt": "Count of Cases"},
             title=('ICU Cases over Time')
+            )
 """Hospitalized Cases Over Time"""
 hos_hos_ts_fig = px.line(df_hos_10, x='cdc_case_earliest_dt', y='count_cdc_case_earliest_dt',
             labels={"cdc_case_earliest_dt": "Date",  "count_cdc_case_earliest_dt": "Count of Cases"},
