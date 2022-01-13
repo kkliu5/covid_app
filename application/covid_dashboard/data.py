@@ -5,17 +5,11 @@ from datetime import datetime
 import requests
 from sodapy import Socrata
 
-"""Calling data from CDC Source using Socrata"""
-def call_client():
-    # Authenticated client:
-    client = Socrata("data.cdc.gov",
-                     app_token="PRIVATE",
-                     username="PRIVATE",
-                     password="PRIVATE")
-    return client
-
 """CASE & DEATH DATA"""
 def create_case_death_df():
+    # Calling data from CDC Source using Socrata
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
+
     """Data Pulls"""
     # Case & Death Data ~20s
     results = client.get_all("9mfq-cb36")
@@ -53,6 +47,9 @@ def create_case_death_df():
 
 """TESTING DATA"""
 def create_test_df():
+    # Calling data from CDC Source using Socrata
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
+    
     """Data Pulls"""
     # Testing Data ~20s
     results = client.get("nra9-vzzn", limit = 100000000)
@@ -137,6 +134,9 @@ def create_test_df():
    
 """ VACCINE DATA"""    
 def create_vacc_df():
+    # Calling data from CDC Source using Socrata
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
+    
     """Data Pulls"""
     columns = ['date, fips, recip_county, recip_state, series_complete_pop_pct, series_complete_yes, booster_doses, booster_doses_vax_pct']
     # Vaccine Data ~12m
@@ -178,6 +178,9 @@ def create_vacc_df():
 
 """HOSPITALZATION DATA"""
 def create_hos_df():
+    # Calling data from CDC Source using Socrata
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
+    
     """Case Status ~2s""""
     results = client.get("vbim-akqf", 
                          select = ["current_status, count('cdc_case_earliest_dt')"],
