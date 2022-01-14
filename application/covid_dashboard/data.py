@@ -2,8 +2,11 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
+from pandas.tseries.offsets import MonthEnd
 import requests
 from sodapy import Socrata
+from urllib.request import urlopen
+import json
 
 """CASE & DEATH DATA"""
 def create_case_death_df():
