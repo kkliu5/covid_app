@@ -24,8 +24,8 @@ total_cases = df_case_death_agg['tot_cases'][0]
 new_deaths = df_case_death_agg['new_death'][0]
 total_deaths = df_case_death_agg['tot_death'][0]
 last_update = datetime.date(df_case_death_agg['submission_date'][0])
-df_test_agg_1 = df_test_agg.loc[df_test_final['tot_test_daily'] > 0].sort_values(by=['date'], ascending=False, ignore_index=True)
-new_tests = df_test_agg['tot_test_daily'].sum()
+new_tests = df_test_agg.loc[df_test_agg['tot_test_daily'] > 0].sort_values(by=['date'], ascending=False, ignore_index=True)
+total_tests = df_test_agg['tot_test_daily'].sum()
 
 def init_dashboard(server):
     dash_app = dash.Dash(
