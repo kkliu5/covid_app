@@ -195,6 +195,7 @@ def create_hos_df():
     df_hos_1['count_cdc_case_earliest_dt'] = df_hos_1['count_cdc_case_earliest_dt'].astype('float')
     
     """Cases by Sex ~1s"""
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get("vbim-akqf", 
                      select = ["sex, count('cdc_case_earliest_dt')"],
                      group = ["sex"])
@@ -209,6 +210,7 @@ def create_hos_df():
     df_hos_2 = df_hos_2.groupby('sex', as_index=False).sum()
     
     """Cases by Age Group ~1s"""
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get("vbim-akqf", 
                          select = ["age_group, count('cdc_case_earliest_dt')"],
                          group = ["age_group"])
@@ -222,6 +224,7 @@ def create_hos_df():
     df_hos_3 = df_hos_3.groupby('age_group', as_index=False).sum()
     
     """Cases by Race ~1s"""
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get("vbim-akqf", 
                          select = ["race_ethnicity_combined, count('cdc_case_earliest_dt')"],
                          group = ["race_ethnicity_combined"])
@@ -242,7 +245,7 @@ def create_hos_df():
     df_hos_4 = df_hos_4.groupby('race_ethnicity_combined', as_index=False).sum()
     
     """Case by Hospitalzation ~1s"""
-    # Calling data from socrata/cdc.
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get("vbim-akqf", 
                          select = ["hosp_yn, count('cdc_case_earliest_dt')"],
                          group = ["hosp_yn"])
@@ -256,7 +259,7 @@ def create_hos_df():
     df_hos_5 = df_hos_5.groupby('hosp_yn', as_index=False).sum()
     
     """ Cases by ICU ~1s"""
-    # Calling data from socrata/cdc.
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get("vbim-akqf", 
                          select = ["icu_yn, count('cdc_case_earliest_dt')"],
                          group = ["icu_yn"])
@@ -271,7 +274,7 @@ def create_hos_df():
     df_hos_6 = df_hos_6.groupby('icu_yn', as_index=False).sum()
     
     """Cases by Death Status ~1s"""
-    # Calling data from socrata/cdc.
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get("vbim-akqf", 
                          select = ["death_yn, count('cdc_case_earliest_dt')"],
                          group = ["death_yn"])
@@ -285,7 +288,7 @@ def create_hos_df():
     df_hos_7 = df_hos_7.groupby('death_yn', as_index=False).sum()
     
     """Cases with Medical Status ~1s"""
-    # Calling data from socrata/cdc.
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get("vbim-akqf", 
                          select = ["medcond_yn, count('cdc_case_earliest_dt')"],
                          group = ["medcond_yn"])
@@ -299,7 +302,7 @@ def create_hos_df():
     df_hos_8 = df_hos_8.groupby('medcond_yn', as_index=False).sum()
     
     """ICU Cases Over Time ~5s"""
-    # Calling data from socrata/cdc.
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get_all("vbim-akqf", 
                          select = ["icu_yn, cdc_case_earliest_dt, count('cdc_case_earliest_dt')"],
                          group = ["icu_yn, cdc_case_earliest_dt"])
@@ -314,6 +317,7 @@ def create_hos_df():
     df_hos_9 = df_hos_9[df_hos_9['icu_yn'] == 'Yes']
 
     """Hospitalized Cases Over Time ~2s"""
+    client = Socrata("data.cdc.gov", app_token="PRIVATE", username="PRIVATE", password="PRIVATE")
     results = client.get_all("vbim-akqf", 
                          select = ["hosp_yn, cdc_case_earliest_dt, count('cdc_case_earliest_dt')"],
                          group = ["hosp_yn, cdc_case_earliest_dt"])
