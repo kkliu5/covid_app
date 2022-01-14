@@ -151,7 +151,7 @@ def create_vacc_df():
         counties = json.load(response)
 
     # Convert to pandas DataFrame
-    df_vacc = pd.DataFrame.from_records(results)
+    df_vacc_1 = pd.DataFrame.from_records(results)
 
     #changing variable type
     df_vacc_1['date'] = df_vacc_1['date'].astype('datetime64')
