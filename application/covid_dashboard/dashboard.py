@@ -16,16 +16,15 @@ from .figures import *
 # Load DataFrame
 df_case_death_agg = create_case_death_df()
 df_test_agg = create_test_df()
-
 # Variables
-df_case_death_agg = df_case_death_agg.sort_values(by=['submission_date'], ascending=False, ignore_index=True)
 new_cases = df_case_death_agg['new_case'][0]
 total_cases = df_case_death_agg['tot_cases'][0]
+new_tests_df = df_test_agg.loc[df_test_agg['tot_test_daily'] > 0].sort_values(by=['date'], ascending=False, ignore_index=True)
+new_tests = new_tests_df['tot_test_daily'][0]
+total_tests = df_test_agg['tot_test_daily'].sum()
 new_deaths = df_case_death_agg['new_death'][0]
 total_deaths = df_case_death_agg['tot_death'][0]
 last_update = datetime.date(df_case_death_agg['submission_date'][0])
-new_tests = df_test_agg.loc[df_test_agg['tot_test_daily'] > 0].sort_values(by=['date'], ascending=False, ignore_index=True)
-total_tests = df_test_agg['tot_test_daily'].sum()
 
 def init_dashboard(server):
     dash_app = dash.Dash(
@@ -45,7 +44,7 @@ def init_dashboard(server):
             dbc.Tabs(
                 [
                     dbc.Tab(label="Overview", tab_id="tab-1"),
-                    dbc.Tab(label="Vaccinations", tab_id="tab-2"),
+                    dbc.Tab(label="Vaccination", tab_id="tab-2"),
                     dbc.Tab(label="Testing", tab_id="tab-3"),
                     dbc.Tab(label="Hospitalizations", tab_id="tab-4"),
                     dbc.Tab(label="Deaths", tab_id="tab-5"),
@@ -90,9 +89,9 @@ def init_callbacks(dash_app):
                             dcc.Dropdown(
                                 id='demo-dropdown',
                                 options=[
-                                    {'label': 'Positive Tests', 'value': 'PT'},
-                                    {'label': 'Hospitalized', 'value': 'H'},
-                                    {'label': 'Deaths', 'value': 'D'}
+                                    {'label': 'New Cases', 'value': 'C'},
+                                    {'label': 'New Hospitalzations', 'value': 'H'},
+                                    {'label': 'New Deaths', 'value': 'D'}
                                 ],
                                 style=
                                     {
@@ -100,38 +99,49 @@ def init_callbacks(dash_app):
                                         'color': '#000000',
                                         'background-color': '#DCDCDC',
                                      },
-                                value='PT',
+                                value='C',
                                 clearable=False,
                                 searchable=False
                             ),
-                        html.Div(id='dd-output-container')
-                    ])
+                        html.Div(id='dd-output-container')]),
+                        html.Br(),
+                        dcc.Graph(id='current_map', figure=current_map)
                         )
             elif active_tab == "tab-2":
-                return (html.Br(),
+                return (
                     dcc.Graph(id='animated_map', figure=animated_map)
-                       )
+                    )
             elif active_tab == "tab-3":
-                return (html.Br(),
+                return (
                     dcc.Graph(id='test_fig', figure=test_fig)
-                       )
+                    )
             elif active_tab == "tab-4":
                 return (
                     dcc.Graph(id='hos_case_fig', figure=hos_case_fig),
+                    html.Br(),
                     dcc.Graph(id='hos_sex_fig', figure=hos_sex_fig),
+                    html.Br(),
                     dcc.Graph(id='hos_age_fig', figure=hos_age_fig),
+                    html.Br(),
                     dcc.Graph(id='hos_race_fig', figure=hos_race_fig),
+                    html.Br(),
                     dcc.Graph(id='hos_hos_fig', figure=hos_hos_fig),
+                    html.Br(),
                     dcc.Graph(id='hos_icu_fig', figure=hos_icu_fig),
+                    html.Br(),
                     dcc.Graph(id='hos_death_fig', figure=hos_death_fig),
-                    dcc.Graph(id='hos_death_fig', figure=hos_med_fig),
-                    dcc.Graph(id='hos_death_fig', figure=hos_icu_ts_fig),
-                    dcc.Graph(id='hos_death_fig', figure=hos_hos_ts_fig)
-                )
+                    html.Br(),
+                    dcc.Graph(id='hos_med_fig', figure=hos_med_fig),
+                    html.Br(),
+                    dcc.Graph(id='hos_icu_ts_fig', figure=hos_icu_ts_fig),
+                    html.Br(),
+                    dcc.Graph(id='hos_hos_ts_fig', figure=hos_hos_ts_fig),
+                    html.Br()
+                    )
             elif active_tab == "tab-5":
                 return (
-                    dcc.Graph(id='death_fig', figure=death_fig)
-                )
+                    dcc.Graph(id='death_fig', figure=death_fig),
+                    )
             elif active_tab == "tab-6":
                 return (
                     html.H4("Dashboard Information"),
@@ -147,9 +157,14 @@ def init_callbacks(dash_app):
                         ]),
                     html.Div([
                         html.P(["The data scource comes from ",
-                                html.A("CDC", href='https://covidtracking.com', target="_blank")
-                               ]),
-                    ]),
+                                html.A("The COVID Tracking Project. ",
+                                       href='https://covidtracking.com', target="_blank"),
+                                html.Li(["Note that data collection through The COVID Tracking Project will end on March 7, 2021 as explained in this ",
+                                html.A("post.",
+                                       href='https://covidtracking.com/analysis-updates/covid-tracking-project-end-march-7', target="_blank"),
+                                 ])
+                                ]),
+                        ]),
                     html.Div([
                         html.P(["The dashboard is hosted on a Raspberry Pi through the use of ",
                                 html.A("NGINX",
@@ -168,54 +183,13 @@ def init_callbacks(dash_app):
         [dash.dependencies.Input('demo-dropdown', 'value')])
         
     def update_output(value):
-        if value == 'PT':
+        if value == 'C':
             return dcc.Graph(id='case_fig', figure=case_fig)
         elif value == 'H':
-            return dcc.Graph(id='animated_map', figure=animated_map)
+            return dcc.Graph(id='hos_hos_ts_fig', figure=hos_hos_ts_fig)
         elif value == 'D':
             return dcc.Graph(id='death_fig', figure=death_fig)
     
-#     @dash_app.callback(Output("collapse-1","is_open"),[Input("collapse-button-1","n_clicks")],[State("collapse-1","is_open")],)
-#     def toggle_collapse_1(n_1, is_open):
-#         if n_1:
-#             return not is_open
-#         return is_open
-    
-#     @dash_app.callback(Output("collapse-2","is_open"),[Input("collapse-button-2","n_clicks")],[State("collapse-2","is_open")],)
-    
-#     def toggle_collapse_2(n_2, is_open):
-#         if n_2:
-#             return not is_open
-#         return is_open
-    
-#     @dash_app.callback(Output("collapse-3","is_open"),[Input("collapse-button-3","n_clicks")],[State("collapse-3","is_open")],)
-    
-#     def toggle_collapse_2(n_3, is_open):
-#         if n_3:
-#             return not is_open
-#         return is_open
-    
-#     @dash_app.callback(Output("collapse-4","is_open"),[Input("collapse-button-4","n_clicks")],[State("collapse-4","is_open")],)
-    
-#     def toggle_collapse_2(n_4, is_open):
-#         if n_4:
-#             return not is_open
-#         return is_open
-    
-#     @dash_app.callback(Output("collapse-5","is_open"),[Input("collapse-button-5","n_clicks")],[State("collapse-5","is_open")],)
-    
-#     def toggle_collapse_2(n_5, is_open):
-#         if n_5:
-#             return not is_open
-#         return is_open
-    
-#     @dash_app.callback(Output("collapse-6","is_open"),[Input("collapse-button-6","n_clicks")],[State("collapse-6","is_open")],)
-    
-#     def toggle_collapse_2(n_6, is_open):
-#         if n_6:
-#             return not is_open
-#         return is_open
-
 # # Dash Items
 def card_content(card_name, card_new_value, card_total_value):
     card = [
