@@ -194,7 +194,7 @@ def create_test_df():
 def create_vacc_df():
     columns = ['date, fips, recip_county, recip_state, series_complete_pop_pct, series_complete_yes, booster_doses, booster_doses_vax_pct']
     client = Socrata("data.cdc.gov", app_token="SMDNVaBjBRb2aY7ZjRLbnLpZc", username="kkliu5@gmail.com", password="R@gTug4WxVs#p5p")
-    results = client.get_all("8xkx-amqh",select = columns)
+    results = client.get("8xkx-amqh", limit = 100000000)
     df_vacc_1 = pd.DataFrame.from_records(results)
     df_vacc_1['date'] = df_vacc_1['date'].astype('datetime64')
     df_vacc_1['recip_county'] = df_vacc_1['recip_county'].astype('string')
@@ -209,12 +209,12 @@ def create_vacc_df():
     date_list = []
     for mon in pd.date_range(date_min, date_max, freq='MS'):
         date_list.append(mon.strftime("%Y-%m-%d"))
-    df_vacc_animated = df_vacc_1[df_vacc_1['date'].isin(date_list)]
+#     df_vacc_animated = df_vacc_1[df_vacc_1['date'].isin(date_list)]
     df_vacc_static = df_vacc_1[df_vacc_1['date'] == date_max]
-    df_vacc_animated = df_vacc_animated.sort_values('date',ascending=True)
-    df_vacc_animated['date'] = df_vacc_animated['date'].astype('string')
+#     df_vacc_animated = df_vacc_animated.sort_values('date',ascending=True)
+#     df_vacc_animated['date'] = df_vacc_animated['date'].astype('string')
 
     with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
         counties = json.load(response)
     
-    return counties, df_vacc_animated, df_vacc_static
+    return counties, df_vacc_static
