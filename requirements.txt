@@ -25,6 +25,7 @@ pytz
 retrying
 requests
 six
+sodapy
 sortedcontainers
 tenacity
 uwsgi
