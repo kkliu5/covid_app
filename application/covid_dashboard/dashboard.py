@@ -107,10 +107,10 @@ def init_callbacks(dash_app):
                         html.Br(),
                         dcc.Graph(id='current_map', figure=current_map)
                         )
-            elif active_tab == "tab-2":
-                return (
-                    dcc.Graph(id='animated_map', figure=animated_map)
-                    )
+#             elif active_tab == "tab-2":
+#                 return (
+#                     dcc.Graph(id='animated_map', figure=animated_map)
+#                     )
             elif active_tab == "tab-3":
                 return (
                     dcc.Graph(id='test_fig', figure=test_fig)
@@ -156,13 +156,9 @@ def init_callbacks(dash_app):
                                 ]),
                         ]),
                     html.Div([
-                        html.P(["The data scource comes from ",
-                                html.A("The COVID Tracking Project. ",
-                                       href='https://covidtracking.com', target="_blank"),
-                                html.Li(["Note that data collection through The COVID Tracking Project will end on March 7, 2021 as explained in this ",
-                                html.A("post.",
-                                       href='https://covidtracking.com/analysis-updates/covid-tracking-project-end-march-7', target="_blank"),
-                                 ])
+                        html.P(["The data scource comes from the ",
+                                html.A("CDC.",
+                                       href='https://data.cdc.gov', target="_blank"),
                                 ]),
                         ]),
                     html.Div([
