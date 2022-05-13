@@ -1,9 +1,9 @@
 """Instantiate a Dash app."""
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
+from dash import dash_table
 import dash_bootstrap_components as dbc
-import dash_table
 import numpy as np
 import pandas as pd
 from dash.dependencies import Input, Output, State
@@ -44,7 +44,7 @@ def init_dashboard(server):
             dbc.Tabs(
                 [
                     dbc.Tab(label="Overview", tab_id="tab-1"),
-                    dbc.Tab(label="Vaccination", tab_id="tab-2"),
+#                     dbc.Tab(label="Vaccination", tab_id="tab-2"),
                     dbc.Tab(label="Testing", tab_id="tab-3"),
                     dbc.Tab(label="Hospitalizations", tab_id="tab-4"),
                     dbc.Tab(label="Deaths", tab_id="tab-5"),
