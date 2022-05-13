@@ -30,6 +30,5 @@ sodapy==2.1.0
 sortedcontainers==2.3.0
 tenacity==6.2.0
 urllib3==1.26.7
-uWSGI==2.0.19.1
 webassets==2.0
 Werkzeug==1.0.1
