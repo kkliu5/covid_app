@@ -28,6 +28,5 @@ six
 sodapy
 sortedcontainers
 tenacity
-uwsgi
 webassets
 werkzeug
