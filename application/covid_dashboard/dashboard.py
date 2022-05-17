@@ -105,7 +105,7 @@ def init_callbacks(dash_app):
                             ),
                         html.Div(id='dd-output-container')]),
                         html.Br(),
-                        dcc.Graph(id='current_map', figure=current_map)
+#                         dcc.Graph(id='current_map', figure=current_map)
                         )
 #             elif active_tab == "tab-2":
 #                 return (
