@@ -217,4 +217,4 @@ def create_vacc_df():
     with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
         counties = json.load(response)
     
-    return counties, df_vacc_static
+    return counties, df_vacc_static, df_vacc_animated
