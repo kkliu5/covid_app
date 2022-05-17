@@ -133,8 +133,8 @@ def init_callbacks(dash_app):
                     html.Br(),
                     dcc.Graph(id='hos_med_fig', figure=hos_med_fig),
                     html.Br(),
-                    dcc.Graph(id='hos_icu_ts_fig', figure=hos_icu_ts_fig),
-                    html.Br(),
+#                     dcc.Graph(id='hos_icu_ts_fig', figure=hos_icu_ts_fig),
+#                     html.Br(),
                     dcc.Graph(id='hos_hos_ts_fig', figure=hos_hos_ts_fig),
                     html.Br()
                     )
