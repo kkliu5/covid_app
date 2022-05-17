@@ -121,14 +121,14 @@ def create_hos_df():
     df_hos_8['medcond_yn'] = df_hos_8['medcond_yn'].str.replace('Unknown','Missing')
     df_hos_8 = df_hos_8.groupby('medcond_yn', as_index=False).sum()
     
-    """ICU Cases Over Time ~5s"""
-    client = Socrata("data.cdc.gov", app_token="SMDNVaBjBRb2aY7ZjRLbnLpZc", username="kkliu5@gmail.com", password="R@gTug4WxVs#p5p")
-    results = client.get_all("vbim-akqf", select = ["icu_yn, cdc_case_earliest_dt, count('cdc_case_earliest_dt')"], group = ["icu_yn, cdc_case_earliest_dt"])
-    df_hos_9 = pd.DataFrame.from_records(results)
-    df_hos_9['icu_yn'] = df_hos_9['icu_yn'].astype('string')
-    df_hos_9['cdc_case_earliest_dt'] = df_hos_9['cdc_case_earliest_dt'].astype('datetime64')
-    df_hos_9['count_cdc_case_earliest_dt'] = df_hos_9['count_cdc_case_earliest_dt'].astype('float')
-    df_hos_9 = df_hos_9[df_hos_9['icu_yn'] == 'Yes']
+#     """ICU Cases Over Time ~5s"""
+#     client = Socrata("data.cdc.gov", app_token="SMDNVaBjBRb2aY7ZjRLbnLpZc", username="kkliu5@gmail.com", password="R@gTug4WxVs#p5p")
+#     results = client.get_all("vbim-akqf", select = ["icu_yn, cdc_case_earliest_dt, count('cdc_case_earliest_dt')"], group = ["icu_yn, cdc_case_earliest_dt"])
+#     df_hos_9 = pd.DataFrame.from_records(results)
+#     df_hos_9['icu_yn'] = df_hos_9['icu_yn'].astype('string')
+#     df_hos_9['cdc_case_earliest_dt'] = df_hos_9['cdc_case_earliest_dt'].astype('datetime64')
+#     df_hos_9['count_cdc_case_earliest_dt'] = df_hos_9['count_cdc_case_earliest_dt'].astype('float')
+#     df_hos_9 = df_hos_9[df_hos_9['icu_yn'] == 'Yes']
 
     """Hospitalized Cases Over Time ~2s"""
     client = Socrata("data.cdc.gov", app_token="SMDNVaBjBRb2aY7ZjRLbnLpZc", username="kkliu5@gmail.com", password="R@gTug4WxVs#p5p")
@@ -139,7 +139,7 @@ def create_hos_df():
     df_hos_10['count_cdc_case_earliest_dt'] = df_hos_10['count_cdc_case_earliest_dt'].astype('float')
     df_hos_10 = df_hos_10[df_hos_10['hosp_yn'] == 'Yes']
     
-    return df_hos_1, df_hos_2, df_hos_3, df_hos_4, df_hos_5, df_hos_6, df_hos_7, df_hos_8, df_hos_9, df_hos_10
+    return df_hos_1, df_hos_2, df_hos_3, df_hos_4, df_hos_5, df_hos_6, df_hos_7, df_hos_8, df_hos_10
 
 """TESTING DATA ~20s"""
 def create_test_df():
