@@ -191,30 +191,30 @@ def create_test_df():
     return df_test_agg
 
 """ VACCINE DATA"""    
-def create_vacc_df():
-    columns = ['date, fips, recip_county, recip_state, series_complete_pop_pct, series_complete_yes, booster_doses, booster_doses_vax_pct']
-    client = Socrata("data.cdc.gov", app_token="SMDNVaBjBRb2aY7ZjRLbnLpZc", username="kkliu5@gmail.com", password="R@gTug4WxVs#p5p")
-    results = client.get("8xkx-amqh", limit = 100000000)
-    df_vacc_1 = pd.DataFrame.from_records(results)
-    df_vacc_1['date'] = df_vacc_1['date'].astype('datetime64')
-    df_vacc_1['recip_county'] = df_vacc_1['recip_county'].astype('string')
-    df_vacc_1['recip_state'] = df_vacc_1['recip_state'].astype('string')
-    df_vacc_1['series_complete_pop_pct'] = df_vacc_1['series_complete_pop_pct'].astype('float')
-    df_vacc_1['series_complete_yes'] = df_vacc_1['series_complete_yes'].astype('float')
-    df_vacc_1['booster_doses'] = df_vacc_1['booster_doses'].astype('float')
-    df_vacc_1['booster_doses_vax_pct'] = df_vacc_1['booster_doses_vax_pct'].astype('float')
+# def create_vacc_df():
+#     columns = ['date, fips, recip_county, recip_state, series_complete_pop_pct, series_complete_yes, booster_doses, booster_doses_vax_pct']
+#     client = Socrata("data.cdc.gov", app_token="SMDNVaBjBRb2aY7ZjRLbnLpZc", username="kkliu5@gmail.com", password="R@gTug4WxVs#p5p")
+#     results = client.get("8xkx-amqh", limit = 100000000)
+#     df_vacc_1 = pd.DataFrame.from_records(results)
+#     df_vacc_1['date'] = df_vacc_1['date'].astype('datetime64')
+#     df_vacc_1['recip_county'] = df_vacc_1['recip_county'].astype('string')
+#     df_vacc_1['recip_state'] = df_vacc_1['recip_state'].astype('string')
+#     df_vacc_1['series_complete_pop_pct'] = df_vacc_1['series_complete_pop_pct'].astype('float')
+#     df_vacc_1['series_complete_yes'] = df_vacc_1['series_complete_yes'].astype('float')
+#     df_vacc_1['booster_doses'] = df_vacc_1['booster_doses'].astype('float')
+#     df_vacc_1['booster_doses_vax_pct'] = df_vacc_1['booster_doses_vax_pct'].astype('float')
 
-    date_min = df_vacc_1['date'].min()
-    date_max = df_vacc_1['date'].max()
-    date_list = []
-    for mon in pd.date_range(date_min, date_max, freq='MS'):
-        date_list.append(mon.strftime("%Y-%m-%d"))
+#     date_min = df_vacc_1['date'].min()
+#     date_max = df_vacc_1['date'].max()
+#     date_list = []
+#     for mon in pd.date_range(date_min, date_max, freq='MS'):
+#         date_list.append(mon.strftime("%Y-%m-%d"))
 #     df_vacc_animated = df_vacc_1[df_vacc_1['date'].isin(date_list)]
-    df_vacc_static = df_vacc_1[df_vacc_1['date'] == date_max]
+#     df_vacc_static = df_vacc_1[df_vacc_1['date'] == date_max]
 #     df_vacc_animated = df_vacc_animated.sort_values('date',ascending=True)
 #     df_vacc_animated['date'] = df_vacc_animated['date'].astype('string')
 
-    with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
-        counties = json.load(response)
+#     with urlopen('https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json') as response:
+#         counties = json.load(response)
     
-    return counties, df_vacc_static
+#     return counties, df_vacc_static
