@@ -44,10 +44,10 @@ def init_dashboard(server):
             dbc.Tabs(
                 [
                     dbc.Tab(label="Overview", tab_id="tab-1"),
-#                     dbc.Tab(label="Vaccination", tab_id="tab-2"),
                     dbc.Tab(label="Testing", tab_id="tab-3"),
                     dbc.Tab(label="Hospitalizations", tab_id="tab-4"),
                     dbc.Tab(label="Deaths", tab_id="tab-5"),
+                    dbc.Tab(label="Vaccination", tab_id="tab-2"),
                     dbc.Tab(label="About", tab_id="tab-6"),
                     ],
                 id = 'tabs',
@@ -105,12 +105,12 @@ def init_callbacks(dash_app):
                             ),
                         html.Div(id='dd-output-container')]),
                         html.Br(),
-#                         dcc.Graph(id='current_map', figure=current_map)
+                        dcc.Graph(id='current_map', figure=current_map)
                         )
-#             elif active_tab == "tab-2":
-#                 return (
-#                     dcc.Graph(id='animated_map', figure=animated_map)
-#                     )
+            elif active_tab == "tab-2":
+                return (
+                    dcc.Graph(id='animated_map', figure=animated_map)
+                    )
             elif active_tab == "tab-3":
                 return (
                     dcc.Graph(id='test_fig', figure=test_fig)
