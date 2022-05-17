@@ -8,7 +8,7 @@ from .data import *
 
 # Load DataFrame
 df_case_death_agg = create_case_death_df()
-df_hos_1, df_hos_2, df_hos_3, df_hos_4, df_hos_5, df_hos_6, df_hos_7, df_hos_8, df_hos_9, df_hos_10 = create_hos_df()
+df_hos_1, df_hos_2, df_hos_3, df_hos_4, df_hos_5, df_hos_6, df_hos_7, df_hos_8, df_hos_10 = create_hos_df()
 df_test_agg = create_test_df()
 # counties, df_vacc_static = create_vacc_df()
 
@@ -101,11 +101,11 @@ hos_med_fig = px.bar(df_hos_8, x='medcond_yn', y='count_cdc_case_earliest_dt',
             labels={"medcond_yn": "Medical Status",  "count_cdc_case_earliest_dt": "Count of Cases"},
             title=('Cases by Presence of Underlying Comorbidity or Disease'))
 fig_format(hos_med_fig)
-"""ICU Cases Over Time"""
-hos_icu_ts_fig = px.line(df_hos_9, x='cdc_case_earliest_dt', y='count_cdc_case_earliest_dt',
-            labels={"cdc_case_earliest_dt": "Date",  "count_cdc_case_earliest_dt": "Count of Cases"},
-            title=('ICU Cases over Time'))
-fig_format(hos_icu_ts_fig)
+# """ICU Cases Over Time"""
+# hos_icu_ts_fig = px.line(df_hos_9, x='cdc_case_earliest_dt', y='count_cdc_case_earliest_dt',
+#             labels={"cdc_case_earliest_dt": "Date",  "count_cdc_case_earliest_dt": "Count of Cases"},
+#             title=('ICU Cases over Time'))
+# fig_format(hos_icu_ts_fig)
 """Hospitalized Cases Over Time"""
 hos_hos_ts_fig = px.line(df_hos_10, x='cdc_case_earliest_dt', y='count_cdc_case_earliest_dt',
             labels={"cdc_case_earliest_dt": "Date",  "count_cdc_case_earliest_dt": "Count of Cases"},
