@@ -10,7 +10,7 @@ from .data import *
 df_case_death_agg = create_case_death_df()
 df_hos_1, df_hos_2, df_hos_3, df_hos_4, df_hos_5, df_hos_6, df_hos_7, df_hos_8, df_hos_10 = create_hos_df()
 df_test_agg = create_test_df()
-# counties, df_vacc_static = create_vacc_df()
+counties, df_vacc_static, df_vacc_animated = create_vacc_df()
 
 # Graphing Functions
 def customlegend(fig, new_legend):
@@ -112,32 +112,32 @@ hos_hos_ts_fig = px.line(df_hos_10, x='cdc_case_earliest_dt', y='count_cdc_case_
             title=('Hospitalized Cases over Time'))
 fig_format(hos_hos_ts_fig)
 
-# """Animated Vaccine Map"""
-# #creating map that displays percent vaccinated by county over time
-# animated_map = px.choropleth_mapbox(df_vacc_animated, geojson=counties, locations='fips', color='series_complete_pop_pct',
-#                            animation_frame='date',
-#                            color_continuous_scale="Viridis",
-#                            range_color=(0, 100),
-#                            mapbox_style="carto-positron",
-#                            zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
-#                            opacity=0.5,
-#                            labels={'series_complete_pop_pct':'Vaccinated Percentage',
-#                                   'date':'Date',
-#                                   'fips':'FIPS Code'}
-#                           )
-# animated_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+"""Animated Vaccine Map"""
+#creating map that displays percent vaccinated by county over time
+animated_map = px.choropleth_mapbox(df_vacc_animated, geojson=counties, locations='fips', color='series_complete_pop_pct',
+                           animation_frame='date',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 100),
+                           mapbox_style="carto-positron",
+                           zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
+                           opacity=0.5,
+                           labels={'series_complete_pop_pct':'Vaccinated Percentage',
+                                  'date':'Date',
+                                  'fips':'FIPS Code'}
+                          )
+animated_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
 
 
-# #Static Vaccine Map
-# #creating map that displays percent vaccinated by county currently
-# current_map = px.choropleth_mapbox(df_vacc_static, geojson=counties, locations='fips', color='series_complete_pop_pct',
-#                            color_continuous_scale="Viridis",
-#                            range_color=(0, 100),
-#                            mapbox_style="carto-positron",
-#                            zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
-#                            opacity=0.5,
-#                            labels={'series_complete_pop_pct':'Vaccinated Percentage',
-#                                   'date':'Date',
-#                                   'fips':'FIPS Code'}
-#                           )
-# animated_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+#Static Vaccine Map
+#creating map that displays percent vaccinated by county currently
+current_map = px.choropleth_mapbox(df_vacc_static, geojson=counties, locations='fips', color='series_complete_pop_pct',
+                           color_continuous_scale="Viridis",
+                           range_color=(0, 100),
+                           mapbox_style="carto-positron",
+                           zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
+                           opacity=0.5,
+                           labels={'series_complete_pop_pct':'Vaccinated Percentage',
+                                  'date':'Date',
+                                  'fips':'FIPS Code'}
+                          )
+animated_map.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
