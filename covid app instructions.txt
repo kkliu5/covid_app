@@ -1,0 +1,127 @@
+
+hostnamectl set-hostname flask-server
+
+nano /etc/hosts
+
+45.79.225.180 	flask-server
+
+adduser kevin
+
+adduser kevin sudo
+
+exit
+
+ssh kevin@45.79.225.180
+
+password -> $Plash21
+
+sudo apt install ufw
+
+sudo ufw default allow outgoing
+
+sudo ufw default deny incoming
+
+sudo ufw allow ssh
+
+sudo ufw allow 5000
+
+sudo ufw enable
+
+sudo ufw status
+
+sudo apt install python3-venv
+
+
+
+Removing github file and replacing 
+
+rm -rf covid_app
+
+git clone https://github.com/kkliu5/covid_app.git
+
+python3 -m venv covid_app/venv
+
+cd covid_app
+
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+
+
+Run test app - doesnt work 
+
+export FLASK_APP=wsgi.py
+
+flask run --host=0.0.0.0
+
+
+
+
+nginx & gunicorn
+
+sudo apt install nginx
+
+pip install gunicorn
+
+sudo rm /etc/nginx/sites-enabled/default
+
+sudo nano /etc/nginx/sites-enabled/covid_app
+
+
+server {
+    listen 80;
+    server_name 45.79.225.180;
+
+    location / {
+        proxy_pass http://localhost:8000;
+        include /etc/nginx/proxy_params;
+        proxy_redirect off;
+    }
+}
+
+sudo ufw allow http/tcp
+
+sudo ufw delete allow 5000
+
+sudo ufw enable
+
+sudo systemctl restart nginx
+
+gunicorn --timeout 3600 -w 5 wsgi:app
+
+	find the number of workers
+	(2 x num_cores) +1
+	nproc --all
+	
+sudo apt install supervisor
+
+sudo nano /etc/supervisor/conf.d/covidapp.conf
+
+[program:covidapp]
+directory=/home/kevin/covid_app
+command=/home/kevin/covid_app/venv/bin/gunicorn --timeout 3600 -w 5 wsgi:app
+user=kevin
+autostart=true
+autorestart=true
+stopasgroup=true
+killasgroup=true
+stderr_logfile=/var/log/covid_app/covid_app.err.log
+stdout_logfile=/var/log/covid_app/covid_app.out.log
+
+sudo mkdir -p /var/log/covid_app
+sudo touch /var/log/covid_app/covid_app.err.log
+sudo touch /var/log/covid_app/covid_app.out.log
+
+sudo supervisorctl reload
+
+
+ctl + L = Clear terminal 
+
+ls = list 
+
+cd = go to 
+
+deactivate
+
+45.79.225.180
